@@ -12,7 +12,7 @@
     {{ if .IsHome }}
       {{ $PageContext = .Site }}
     {{ end }}
-    {{ $paginator := .Paginate (where $PageContext.RegularPages "Type" $contentTypeName) }}
+    <!-- {{ $paginator := .Paginate (where $PageContext.RegularPages "Type" $contentTypeName) }}
 
     {{ range $paginator.Pages }}
       <article class="post on-list">
@@ -61,6 +61,23 @@
       </article>
     {{ end }}
 
-    {{ partial "pagination.html" . }}
+    {{ partial "pagination.html" . }} -->
+    <ul>
+      {{ range (where .Site.RegularPages "Type" "in" (slice "posts")).GroupByDate "2006" }}
+        <h2 class="post-title">{{ .Key }}: </h2> <!-- - {{ len .Pages }} posts-->
+        <ul>
+        {{ range .Pages.ByTitle }}
+           <li>
+            {{- if .Date -}}
+              <time class="post-date">
+                <code>{{- .Date.Format "2006-01-02" -}}</code>
+              </time>
+            {{- end -}}
+            <a href="{{ .Permalink }}">{{ .Title | markdownify }}</a>
+            </li>
+        {{ end }}
+        </ul>
+      {{ end }}
+  </ul>
   </div>
 {{ end }}
